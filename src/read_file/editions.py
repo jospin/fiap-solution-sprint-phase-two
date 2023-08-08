@@ -1,5 +1,6 @@
 import pandas as pd
 from constant import *
+from constant_private import *
 
 class readings():
     def __init__(self, s3_client) -> None:
