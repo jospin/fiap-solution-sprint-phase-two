@@ -1,0 +1,49 @@
+{
+    "books": "OL25530900M",
+    "revision": 2,
+    "date": "2020-05-16T20:36:31.367798",
+    "identifiers": {
+        "goodreads": 3743985,
+        "librarything": 560169
+    },
+    "isbn_10": [
+        "1461377994",
+        "1461561094"
+    ],
+    "isbn_13": [
+        "9781461377993",
+        "9781461561095"
+    ],
+    "ia_box_id": [
+        "IA184301"
+    ],
+    "publish_places": "Ottawa",
+    "languages": [
+        {
+            "key": "/languages/fre"
+        }
+    ],
+    "publish_date": 1985,
+    "full_title": "The Georgia historical quarterly",
+    "authors": [
+        {
+            "key": "/authors/OL7196779A"
+        }
+    ],
+    "subjects": [
+        "Maternal age",
+        "United States",
+        "Juvenile Social Problems (General)",
+        "Juvenile Nonfiction",
+        "Children's 9-12 - Diet",
+        "Children's Books/Ages 9-12 Nonfiction",
+        "Teenage pregnancy",
+        "Children: Grades 4-6",
+        "Pregnancy",
+        "Juvenile literature",
+        "Health & Daily Living - Sexuality & Pregnancy",
+        "Health - Sexuality & Pregnancy",
+        "Non-Classifiable"
+    ],
+    "title": "The Georgia historical quarterly"
+}
