@@ -1,0 +1,2 @@
+REGEX_BOOKS = r"(OL\S+M)"
+REGEX_WORKS = r"(OL\S+W)"

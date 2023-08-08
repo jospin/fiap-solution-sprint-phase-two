@@ -1,0 +1,5 @@
+INPUT = "dl/input/openlibrary/"
+OUTPUT = "dl/output/openlibrary/"
+BUCKET = "fiap-solution-sprint-phase-two-data-architecture"
+AWS_ACCESS_KEY_ID="AKIAY6ZSYFL2HL7ZKAXB"
+AWS_SECRET_ACCESS_KEY="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"
