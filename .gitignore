@@ -1,4 +1,4 @@
-src/contant_private
+src/constant_private.py
 */__pycache__/*
 dist
 build
