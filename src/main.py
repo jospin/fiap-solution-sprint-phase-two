@@ -13,7 +13,7 @@ def main(event, context):
     # rating_object.save()
     work_object = work()
     work_object.readFile()
-    # work_object.save()
+    work_object.save()
 
 
 if __name__ == "__main__":
