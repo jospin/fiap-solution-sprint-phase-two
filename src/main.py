@@ -11,9 +11,12 @@ def main(event, context):
     # rating_object = rating()
     # rating_object.readFile()
     # rating_object.save()
-    work_object = work()
-    work_object.readFile()
-    work_object.save()
+    # work_object = work()
+    # work_object.readFile()
+    # work_object.save()
+    author_object = author()
+    author_object.readFile()
+    author_object.save()
 
 
 if __name__ == "__main__":

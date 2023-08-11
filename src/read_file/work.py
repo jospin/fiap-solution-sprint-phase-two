@@ -19,6 +19,7 @@ class work():
         # self.output.date = pd.to_datetime(self.dataFrame.date, format='ISO8601')
         self.dataFrame.worksId = self.dataFrame.worksId.str.extract(REGEX_WORKS)
         self.dataFrame.date = pd.to_datetime(self.dataFrame.date, format='ISO8601')
+        print(self.dataFrame.json)
 
         count = 0
         title = []
@@ -48,13 +49,13 @@ class work():
         subjects = self.__parse_any_key(json=json, key="subjects")
         delim = "|"
         result = delim.join([str(sbj) for sbj in subjects])
-        print(result)
         return result
     
     def __parse_authors(self, json) :
         authors_object = self.__parse_any_key(json=json, key="authors")
         delim = "|"
-        print([str(auth['author']['key']).str.extract(REGEX_AUTHOR) for auth in authors_object])
+        print(authors_object)
+        print([str(auth) for auth in authors_object])
         # result = delim.join([str(auth['author'].str.extract(REGEX_AUTHOR)) for auth in authors_object])
         return result
 
