@@ -1,18 +1,16 @@
 import pandas as pd
 from datetime import datetime
 from constant import *
+from constant_private import *
 
-class readings():
-    def __init__(self, s3_client) -> None:
-        self.s3_client = s3_client
-
+class rating():
+    def __init__(self, ) -> None:
         pass
 
     def readFile(self, ):
-        file = INPUT + "readings/ol_dump_reading-log_2023-07-31.txt"
-        response = self.s3_client.get_object(Bucket=BUCKET, Key=file)
-        self.dataFrame = pd.read_csv(response.get('Body'), sep="\t", header=None)
-        self.dataFrame.columns=["worksId","booksId", "status", "date"]
+        file = BUCKET + INPUT + DUMP_RATINGS_FILE
+        self.dataFrame = pd.read_csv(file, sep="\t", header=None)
+        self.dataFrame.columns=["worksId","booksId", "rates", "date"]
         self.dataFrame.worksId = self.dataFrame.worksId.str.extract(REGEX_WORKS)
         self.dataFrame.booksId = self.dataFrame.booksId.str.extract(REGEX_BOOKS)
         self.dataFrame.date = pd.to_datetime(self.dataFrame.date, format='%Y-%m-%d')
@@ -20,5 +18,5 @@ class readings():
         print(self.dataFrame)
 
     def save(self):
-        self.s3_client.put_object(Body=self.dataFrame.to_parquet(), Bucket=BUCKET, Key=OUTPUT+"readings/reading.parquet")
+        self.dataFrame.to_csv(BUCKET + OUTPUT + "/rating.csv")
         
