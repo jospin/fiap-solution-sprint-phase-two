@@ -12,9 +12,12 @@ def main(event, context):
     # author_object = author()
     # author_object.readFile()
     # author_object.save()
-    work_object = work()
-    work_object.readFile()
-    work_object.save()
+    # work_object = work()
+    # work_object.readFile()
+    # work_object.save()
+    edition_object = edition()
+    edition_object.readFile()
+    edition_object.save()
 
 
 if __name__ == "__main__":

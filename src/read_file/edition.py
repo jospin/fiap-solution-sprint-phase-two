@@ -6,31 +6,38 @@ from constant_private import *
 import re
 import json
 
-class work():
+class edition():
     def __init__(self, ) -> None:
         pass
 
     def readFile(self, ):
-        file = BUCKET + INPUT + DUMP_WORK_FILE
-        self.dataFrame = pd.read_csv(file, sep="\t", header=None, nrows=200000)
-        self.dataFrame.columns=["type","worksId","amount", "date", "json"]
+        file = BUCKET + INPUT + DUMP_EDITIONS_FILE
+        self.dataFrame = pd.read_csv(file, sep="\t", header=None, nrows=5)
+        self.dataFrame.columns=["type","booksId","amount", "date", "json"]
         self.dataFrame.drop(["type","amount"], axis='columns', inplace=True)
-        self.dataFrame.worksId = self.dataFrame.worksId.str.extract(REGEX_WORKS)
+        self.dataFrame.booksId = self.dataFrame.booksId.str.extract(REGEX_BOOKS)
         self.dataFrame.date = pd.to_datetime(self.dataFrame.date, format='ISO8601')
         title = []
         subjects = []
         authors = []
         created = []
+        isnb10 = []
+        isnb13 = []
         for ind in self.dataFrame.index:
             json_object = json.loads(self.dataFrame['json'][ind])
+            # print(json_object)
             title.append(self.__parse_any_key(json_object, 'title'))
-            subjects.append(self.__parse_subject(json_object))
+            subjects.append(self.__parse_array(json_object, "subjects"))
             authors.append(self.__parse_authors(json_object))
+            isnb13.append(self.__parse_array(json_object, "isbn_13"))
+            isnb10.append(self.__parse_array(json_object, "isbn_10"))
             created.append(self.__parse_created(json_object))
         self.dataFrame.drop(["json"], axis='columns', inplace=True)
         self.dataFrame['title'] = title
         self.dataFrame['subjects'] = subjects
         self.dataFrame['authors'] = authors
+        self.dataFrame['isnb10'] = isnb10
+        self.dataFrame['isnb13'] = isnb13
         self.dataFrame['created'] = created
 
     def __parse_any_key(self, json, key):
@@ -38,13 +45,13 @@ class work():
             return json[key] 
         else:
             return ""
-        
-    def __parse_subject(self, json) :
+            
+    def __parse_array(self, json, key) :
         result = ""
 
-        subjects = self.__parse_any_key(json=json, key="subjects")
+        arrayValue = self.__parse_any_key(json=json, key=key)
         delim = "|"
-        result = delim.join([str(sbj) for sbj in subjects])
+        result = delim.join([str(value) for value in arrayValue])
         return result
 
     def __parse_created(self, json) :
@@ -58,11 +65,11 @@ class work():
         authors_object = self.__parse_any_key(json=json, key="authors")
         delim = "|"
         try: 
-            result = delim.join([re.search(REGEX_AUTHOR, str(auth['author'])).group() for auth in authors_object])
+            result = delim.join([re.search(REGEX_AUTHOR, str(auth['key'])).group() for auth in authors_object])
         except:
             print("Error to pase author")
         return result
 
     def save(self):
-        self.dataFrame.to_csv(BUCKET + OUTPUT + "/work.csv")
+        self.dataFrame.to_json(BUCKET + OUTPUT + "/edition.json")
         ""
