@@ -71,5 +71,5 @@ class edition():
         return result
 
     def save(self):
-        self.dataFrame.to_json(BUCKET + OUTPUT + "/edition.json")
+        self.dataFrame.to_csv(BUCKET + OUTPUT + "/edition.json")
         ""
