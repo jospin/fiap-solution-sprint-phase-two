@@ -5,14 +5,21 @@ from constant import *
 from constant_private import *
 import re
 import json
+from threading import Thread
 
-class work():
-    def __init__(self, ) -> None:
-        pass
+class work(Thread):
+    def __init__(self, num):
+        Thread.__init__(self)
+        self.num = num
+        print("Thread num: " + str(num))
 
-    def readFile(self, ):
+    def run(self):
+        self.__readFile()
+        self.__save()
+
+    def __readFile(self, ):
         file = BUCKET + INPUT + DUMP_WORK_FILE
-        self.dataFrame = pd.read_csv(file, sep="\t", header=None, nrows=200000)
+        self.dataFrame = pd.read_csv(file, sep="\t", header=None, nrows=700000)
         self.dataFrame.columns=["type","worksId","amount", "date", "json"]
         self.dataFrame.drop(["type","amount"], axis='columns', inplace=True)
         self.dataFrame.worksId = self.dataFrame.worksId.str.extract(REGEX_WORKS)
@@ -43,9 +50,7 @@ class work():
         result = ""
 
         subjects = self.__parse_any_key(json=json, key="subjects")
-        delim = "|"
-        result = delim.join([str(sbj) for sbj in subjects])
-        return result
+        return subjects
 
     def __parse_created(self, json) :
         result = ""
@@ -56,13 +61,12 @@ class work():
     def __parse_authors(self, json) :
         result = ""
         authors_object = self.__parse_any_key(json=json, key="authors")
-        delim = "|"
         try: 
-            result = delim.join([re.search(REGEX_AUTHOR, str(auth['author'])).group() for auth in authors_object])
+            result = [re.search(REGEX_AUTHOR, str(auth['author'])).group() for auth in authors_object]
         except:
-            print("Error to pase author")
+            ""
         return result
 
-    def save(self):
-        self.dataFrame.to_csv(BUCKET + OUTPUT + "/work.csv")
-        ""
+    def __save(self):
+        self.dataFrame.to_json(BUCKET + OUTPUT + "/json/work.json", orient="records")
+        print(str(self.num) + " finished: " + str(len(self.dataFrame.index)))

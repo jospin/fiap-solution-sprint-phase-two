@@ -5,14 +5,21 @@ from constant import *
 from constant_private import *
 import re
 import json
+from threading import Thread
 
-class edition():
-    def __init__(self, ) -> None:
-        pass
+class edition(Thread):
+    def __init__(self, num):
+        Thread.__init__(self)
+        self.num = num
+        print("Thread num: " + str(num))
 
-    def readFile(self, ):
+    def run(self):
+        self.__readFile()
+        self.__save()
+
+    def __readFile(self, ):
         file = BUCKET + INPUT + DUMP_EDITIONS_FILE
-        self.dataFrame = pd.read_csv(file, sep="\t", header=None, nrows=5)
+        self.dataFrame = pd.read_csv(file, sep="\t", header=None, nrows=800000)
         self.dataFrame.columns=["type","booksId","amount", "date", "json"]
         self.dataFrame.drop(["type","amount"], axis='columns', inplace=True)
         self.dataFrame.booksId = self.dataFrame.booksId.str.extract(REGEX_BOOKS)
@@ -25,7 +32,6 @@ class edition():
         isnb13 = []
         for ind in self.dataFrame.index:
             json_object = json.loads(self.dataFrame['json'][ind])
-            # print(json_object)
             title.append(self.__parse_any_key(json_object, 'title'))
             subjects.append(self.__parse_array(json_object, "subjects"))
             authors.append(self.__parse_authors(json_object))
@@ -50,9 +56,9 @@ class edition():
         result = ""
 
         arrayValue = self.__parse_any_key(json=json, key=key)
-        delim = "|"
-        result = delim.join([str(value) for value in arrayValue])
-        return result
+        # delim = "|"
+        # result = delim.join([str(value) for value in arrayValue])
+        return arrayValue
 
     def __parse_created(self, json) :
         result = ""
@@ -63,13 +69,14 @@ class edition():
     def __parse_authors(self, json) :
         result = ""
         authors_object = self.__parse_any_key(json=json, key="authors")
-        delim = "|"
+        # delim = "|"
         try: 
-            result = delim.join([re.search(REGEX_AUTHOR, str(auth['key'])).group() for auth in authors_object])
+            result = [re.search(REGEX_AUTHOR, str(auth['key'])).group() for auth in authors_object]
         except:
             print("Error to pase author")
         return result
 
-    def save(self):
-        self.dataFrame.to_csv(BUCKET + OUTPUT + "/edition.json")
+    def __save(self):
+        self.dataFrame.to_json(BUCKET + OUTPUT + "/json/edition.json", orient="records")
+        print(str(self.num) + " finished: " + str(len(self.dataFrame.index)))
         ""
